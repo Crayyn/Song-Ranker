@@ -26,42 +26,47 @@ def rank_songs(list_of_songs, passed_songs, eliminated_songs, rank_up_to, curren
     if len(passed_songs) != 0:
         list_of_songs = passed_songs
     number_of_songs = len(list_of_songs)
-    number_of_matchups = number_of_songs // 2
+    number_of_matchups = number_of_songs * (number_of_songs - 1) // 2
     passed_songs = []
+    previous_matchups = [""]
 
+    for _ in range(number_of_matchups):
+        song1 = ""
+        song2 = ""
 
+        while song1 == song2:
+            song1 = random.choice(list_of_songs)
+            song2 = random.choice(list_of_songs)
+            if [song1, song2] in previous_matchups or [song2, song1] in previous_matchups:
+                song1 = ""
+                song2 = ""
 
+        song1_position = list_of_songs.index(song1)
+        song2_position = list_of_songs.index(song2)
+        previous_matchups.append([song1, song2])
 
-    print(list_of_songs)
-
-    for i in range(number_of_matchups):
-        song1 = random.choice(list_of_songs)
-        song2 = random.choice(list_of_songs)
         while True:
             choice = int(input("which song do you prefer: \n\t1: " + song1 + "\n\t2: " + song2 + "\n1 or 2? "))
             if choice == 1:
                 print(song1 + " wins the round!")
                 passed_songs.append(song1)
                 eliminated_songs.append(song2)
-                list_of_songs.remove(song1)
-                list_of_songs.remove(song2)
+                has_song_been_shown[song1_position] += 1
                 break
             elif choice == 2:
                 print(song2 + " wins the round!")
                 passed_songs.append(song2)
                 eliminated_songs.append(song1)
-                list_of_songs.remove(song2)
-                list_of_songs.remove(song1)
+                has_song_been_shown[song2_position] += 1
                 break
             else:
                 print("well you must have goofed up somehow so try again")
 
-        random.shuffle(list_of_songs)
+    print(list_of_songs)
+    print(has_song_been_shown)
 
-    if len(list_of_songs) == 1:
-        passed_songs.append(list_of_songs[0])
-        list_of_songs.remove(list_of_songs[0])
 
+'''
     if len(passed_songs) == 1:
         print("Your No. " + str(current_rank) + " favourite song in this playlist is " + passed_songs[0] + "!")
         winning_song_order.append(passed_songs[0])
@@ -80,7 +85,7 @@ def rank_songs(list_of_songs, passed_songs, eliminated_songs, rank_up_to, curren
             rank_songs(list_of_songs, passed_songs, eliminated_songs, rank_up_to, current_rank, has_song_been_shown)
 
     rank_songs(list_of_songs, passed_songs, eliminated_songs, rank_up_to, current_rank, has_song_been_shown)
-
+'''
 
 while rank_up_to > number_of_songs:
     number_of_songs = int(input("please enter the number of songs you'd like to enter: "))
